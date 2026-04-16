@@ -1,0 +1,14 @@
+{
+  "properties": [
+    {
+      "name": "file.upload-dir",
+      "type": "java.lang.String",
+      "description": "Directory path where uploaded files are stored."
+    },
+    {
+      "name": "app.style.version",
+      "type": "java.lang.String",
+      "description": "Cache-busting version suffix for frontend static assets."
+    }
+  ]
+}
