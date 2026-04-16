@@ -34,6 +34,7 @@ build/
 
 ### Local Configuration & Secrets ###
 application-local.properties
+src/main/resources/application-local.properties
 .env
 .env.local
 *.key
