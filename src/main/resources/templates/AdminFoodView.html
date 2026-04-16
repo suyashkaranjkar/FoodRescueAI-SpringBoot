@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Food Inventory</title>
+    <link rel="stylesheet" th:href="@{/style.css(v=${@environment.getProperty('app.style.version')})}">
+</head>
+
+<body>
+<div class="page-top-nav">
+    <a class="site-brand" th:href="@{/form/show}">FoodRescueAI</a>
+    <p class="site-brand-copy">Admin food inventory view</p>
+</div>
+
+<main class="page-shell admin-food-page">
+    <h1>Food Inventory</h1>
+    <p class="helper-text">View all listed food items for the selected hotel.</p>
+
+    <section class="food-claims-card">
+        <div class="table-wrap">
+            <table>
+                <tr>
+                    <th>Food ID</th>
+                    <th>Food Name</th>
+                    <th>Food Type</th>
+                    <th>Quantity</th>
+                    <th>Unit</th>
+                    <th>Cooked When</th>
+                    <th>Fresh Until</th>
+                    <th>Status</th>
+                    <th>Photo</th>
+                    <th>NGO Name</th>
+                    <th>NGO Contact Number</th>
+                    <th>Edit</th>
+                </tr>
+
+                <tr th:if="${foodList.isEmpty()}">
+                    <td colspan="12" class="empty-state">No food items found for this hotel</td>
+                </tr>
+
+                <tr th:each="food:${foodList}">
+                    <td th:text="${food.id}"></td>
+                    <td th:text="${food.foodName}"></td>
+                    <td th:text="${food.foodType}"></td>
+                    <td th:text="${food.quantity}"></td>
+                    <td th:text="${food.quantityUnit}"></td>
+                    <td th:text="${food.cookedWhen}"></td>
+                    <td th:text="${food.freshUntil}"></td>
+                    <td><span class="status-pill" th:classappend="' ' + ${#strings.toLowerCase(food.status.name())}" th:text="${food.status}"></span></td>
+                    <td><span th:if="${food.photoFilename != null}"><a th:href="@{'/set/files/'+${food.photoFilename}}" target="_blank">View</a></span></td>
+                    <td th:text="${food.acceptedNgoName != null and !#strings.isEmpty(food.acceptedNgoName)} ? ${food.acceptedNgoName} : 'N/A'"></td>
+                    <td th:text="${food.acceptedNgoMobile != null and !#strings.isEmpty(food.acceptedNgoMobile)} ? ${food.acceptedNgoMobile} : 'N/A'"></td>
+                    <td><a class="action-link cyan" th:href="@{/set/hotel-food/edit/{id}(id=${food.id})}">Edit</a></td>
+                </tr>
+            </table>
+        </div>
+    </section>
+
+    <div class="page-actions">
+        <a class="btn btn-ghost" th:href="@{/set/dashboard}">Back to Dashboard</a>
+    </div>
+</main>
+
+</body>
+</html>
+

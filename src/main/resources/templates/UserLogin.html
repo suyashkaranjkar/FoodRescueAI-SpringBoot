@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Login</title>
+    <link rel="stylesheet" th:href="@{/style.css(v=${@environment.getProperty('app.style.version')})}">
+</head>
+
+<body>
+
+<div class="page-top-nav">
+    <a class="site-brand" th:href="@{/form/show}">FoodRescueAI</a>
+    <p class="site-brand-copy">Hotel access</p>
+    <a class="btn btn-ghost" th:href="@{/form/show}">Home</a>
+</div>
+
+<main class="auth-shell">
+    <section class="auth-hero">
+        <p class="eyebrow">Hotel Portal</p>
+        <h1>Sign in to manage surplus food.</h1>
+        <p class="helper-text">Post food, review NGO responses, and keep delivery status organized.</p>
+
+        <div class="auth-points">
+            <div class="auth-point">
+                <strong>Structured workflow</strong>
+                Create, update, and track donations with clear status changes.
+            </div>
+            <div class="auth-point">
+                <strong>Claim visibility</strong>
+                See which NGO accepted each item and contact details in one place.
+            </div>
+        </div>
+    </section>
+
+    <section class="auth-panel login-box">
+        <form th:action="@{/form/afterlogin}" method="post">
+
+            <h1>Hotel Login Portal</h1>
+            <p class="helper-text">Use your registered Permanent ID and mobile number to access hotel tools.</p>
+
+            <label>Hotel Permanent ID</label>
+            <input type="text" name="permid" required>
+
+            <label>Mobile Number</label>
+            <input type="number" name="mob" required>
+
+            <input type="submit" value="Login">
+
+        </form>
+
+        <p class="error" th:text="${error}"></p>
+
+        <h3>Don't have an Account?</h3>
+        <a th:href="@{/form/hotel/register}">Register your Hotel Here</a>
+    </section>
+</main>
+
+</body>
+
+</html>

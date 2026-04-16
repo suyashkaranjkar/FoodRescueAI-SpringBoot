@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGO Registration</title>
+    <link rel="stylesheet" th:href="@{/style.css(v=${@environment.getProperty('app.style.version')})}">
+</head>
+<body>
+    <div class="page-top-nav">
+        <a class="site-brand" th:href="@{/form/show}">FoodRescueAI</a>
+        <p class="site-brand-copy">NGO registration</p>
+        <a class="btn btn-ghost" th:href="@{/form/show}">Home</a>
+    </div>
+
+    <main class="auth-shell">
+        <section class="auth-hero">
+            <p class="eyebrow">NGO onboarding</p>
+            <h1>Register your organization to receive matched donations.</h1>
+            <p class="helper-text">Complete your NGO profile so hotels can trust your availability and reach.</p>
+
+            <div class="auth-points">
+                <div class="auth-point">
+                    <strong>Accurate matching</strong>
+                    City and distance help us find donations that fit your reach.
+                </div>
+                <div class="auth-point">
+                    <strong>Capacity-aware flow</strong>
+                    Set your meal capacity to avoid over-claiming food.
+                </div>
+            </div>
+        </section>
+
+        <section class="auth-panel form-box">
+            <form th:action="@{/ngo/register}" method="post" th:object="${ngo}">
+                <h1>NGO Registration</h1>
+                <p class="helper-text">Register your NGO to receive relevant food donations and support your community faster.</p>
+
+                <div class="input-group">
+                    <label>NGO Name</label>
+                    <input type="text" th:field="*{name}" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" th:field="*{email}" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" th:field="*{password}" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Contact Number</label>
+                    <input type="text" th:field="*{mob}" required>
+                </div>
+
+                <div class="input-group">
+                    <label>City</label>
+                    <input type="text" th:field="*{city}" list="city-options" placeholder="Search or select a city" autocomplete="off" required>
+                    <datalist id="city-options">
+                        <option value="Amravati"></option>
+                        <option value="Akola"></option>
+                        <option value="Aurangabad"></option>
+                        <option value="Bengaluru"></option>
+                        <option value="Bhopal"></option>
+                        <option value="Chennai"></option>
+                        <option value="Delhi"></option>
+                        <option value="Goa"></option>
+                        <option value="Hyderabad"></option>
+                        <option value="Indore"></option>
+                        <option value="Jaipur"></option>
+                        <option value="Kolhapur"></option>
+                        <option value="Kolkata"></option>
+                        <option value="Lucknow"></option>
+                        <option value="Mumbai"></option>
+                        <option value="Nagpur"></option>
+                        <option value="Nashik"></option>
+                        <option value="Navi Mumbai"></option>
+                        <option value="Pune"></option>
+                        <option value="Solapur"></option>
+                        <option value="Surat"></option>
+                        <option value="Thane"></option>
+                        <option value="Vadodara"></option>
+                    </datalist>
+                </div>
+
+                <div class="input-group">
+                    <label>Preferred Delivery Distance (km)</label>
+                    <input type="number" min="1" th:field="*{preferredDistanceKm}" placeholder="10">
+                </div>
+
+                <div class="input-group">
+                    <label>NGO Capacity (number of meals)</label>
+                    <input type="number" min="1" th:field="*{capacity}" placeholder="100">
+                </div>
+
+                <div class="input-group">
+                    <label>Address</label>
+                    <textarea th:field="*{address}" rows="4" required></textarea>
+                </div>
+
+                <button type="submit">Register</button>
+            </form>
+
+            <div th:if="${error}" class="text-error" th:text="${error}"></div>
+            <div th:if="${message}" class="text-success" th:text="${message}"></div>
+
+            <a th:href="@{/ngo/login}">Already registered? Login here</a>
+        </section>
+    </main>
+</body>
+</html>

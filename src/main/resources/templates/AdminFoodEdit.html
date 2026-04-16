@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Food Item - Admin</title>
+    <link rel="stylesheet" th:href="@{/style.css(v=${@environment.getProperty('app.style.version')})}">
+</head>
+<body>
+<div class="page-top-nav">
+    <a class="site-brand" th:href="@{/form/show}">FoodRescueAI</a>
+    <p class="site-brand-copy">Admin food editor</p>
+</div>
+
+<main class="page-shell admin-food-edit-page">
+    <section class="food-editor-card">
+        <h1>Edit Food Item</h1>
+        <p class="helper-text">Update food details including expiry information. Claimed and delivered items keep their existing status.</p>
+
+        <p th:if="${statusLocked}" class="info-banner">This item is already <strong th:text="${food.status}"></strong>. Its status will remain unchanged after saving.</p>
+
+        <form class="food-editor-form" th:action="@{/set/hotel-food/update/{id}(id=${food.id})}" method="post">
+            <div class="food-field span-2">
+                <label for="foodName">Food Name *</label>
+                <input type="text" id="foodName" name="foodName" th:value="${food.foodName}" required>
+            </div>
+
+            <div class="food-field">
+                <label for="foodType">Food Type *</label>
+                <select id="foodType" name="foodType" required>
+                    <option value="Veg" th:selected="${food.foodType == 'Veg'}">Veg</option>
+                    <option value="Non-Veg" th:selected="${food.foodType == 'Non-Veg'}">Non-Veg</option>
+                </select>
+            </div>
+
+            <div class="food-field">
+                <label for="quantity">Quantity *</label>
+                <input type="number" id="quantity" name="quantity" th:value="${food.quantity}" min="1" required>
+            </div>
+
+            <div class="food-field">
+                <label for="quantityUnit">Quantity Unit *</label>
+                <select id="quantityUnit" name="quantityUnit" required>
+                    <option value="kg" th:selected="${food.quantityUnit == 'kg'}">Kilogram (kg)</option>
+                    <option value="servings" th:selected="${food.quantityUnit == 'servings'}">Servings</option>
+                    <option value="ltr" th:selected="${food.quantityUnit == 'ltr'}">Liters (ltr)</option>
+                    <option value="packets" th:selected="${food.quantityUnit == 'packets'}">Packets</option>
+                </select>
+            </div>
+
+            <div class="food-field">
+                <label for="cookedWhen">Cooked When *</label>
+                <input type="date" id="cookedWhen" name="cookedWhen" th:value="${food.cookedWhen}" required>
+            </div>
+
+            <div class="food-field">
+                <label for="freshUntil">Fresh Until *</label>
+                <input type="date" id="freshUntil" name="freshUntil" th:value="${food.freshUntil}" required>
+            </div>
+
+            <div class="food-field span-2">
+                <label>Current Status</label>
+                <span class="status-pill" th:classappend="' ' + ${#strings.toLowerCase(food.status.name())}" th:text="${food.status}"></span>
+            </div>
+
+            <div class="food-field form-actions span-2">
+                <button type="submit">Save Changes</button>
+                <a class="btn btn-ghost" th:href="@{/set/hotel-food/{permid}(permid=${food.permid})}">Cancel</a>
+            </div>
+        </form>
+    </section>
+</main>
+
+</body>
+</html>

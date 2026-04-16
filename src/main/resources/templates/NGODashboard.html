@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGO Dashboard</title>
+    <link rel="stylesheet" th:href="@{/style.css(v=${@environment.getProperty('app.style.version')})}">
+</head>
+<body>
+    <div class="page-top-nav">
+        <a class="site-brand" th:href="@{/form/show}">FoodRescueAI</a>
+        <p class="site-brand-copy">NGO operations workspace</p>
+    </div>
+
+    <main class="page-shell ngo-dashboard-page">
+    <h1>Welcome, <span th:text="${ngo.name}"></span>!</h1>
+    <p class="helper-text">Review suggested and nearby food donations, then accept or reject based on your capacity.</p>
+    <section class="food-claims-card">
+        <h2>Your NGO Profile</h2>
+        <p><strong>Name:</strong> <span th:text="${ngo.name}"></span></p>
+        <p><strong>Email:</strong> <span th:text="${ngo.email}"></span></p>
+        <p><strong>Contact:</strong> <span th:text="${ngo.mob}"></span></p>
+        <p><strong>City:</strong> <span th:text="${ngo.city}"></span></p>
+        <p><strong>Address:</strong> <span th:text="${ngo.address}"></span></p>
+        <div class="page-actions">
+            <a class="btn btn-ghost" th:href="@{/ngo/edit}">Edit NGO details</a>
+        </div>
+    </section>
+
+    <h2>Suggested Food List By FoodRescueAI</h2>
+    <div th:if="${suggestedFoods != null and suggestedFoods.size() > 0}">
+        <div class="inventory-list">
+        <article th:each="food : ${suggestedFoods}" class="inventory-item">
+            <h3 th:text="${food.foodName}"></h3>
+            <p>Type: <span th:text="${food.foodType}"></span></p>
+            <p>Quantity: <span th:text="${food.quantity}"></span> <span th:text="${food.quantityUnit}"></span></p>
+            <p>Fresh Until: <span th:text="${#temporals.format(food.freshUntil, 'dd-MM-yyyy')}"></span></p>
+            <div>
+                <p><strong>Hotel:</strong> <span th:text="${food.hotelName}"></span></p>
+                <p><strong>Contact:</strong> <span th:text="${food.hotelMobile}"></span></p>
+                <p><strong>Address:</strong> <span th:text="${food.hotelAddress}"></span></p>
+                <p th:if="${food.hotelDistanceKm != null}"><strong>Distance:</strong> <span th:text="${food.hotelDistanceKm}"></span> km</p>
+            </div>
+            <p th:if="${food.photoFilename != null}"><a th:href="@{'/set/files/'+${food.photoFilename}}" target="_blank">View Photo</a></p>
+            <form th:action="@{'/ngo/accept/' + ${food.id}}" method="post" class="inline-form">
+                <button type="submit">Accept</button>
+            </form>
+            <form th:action="@{'/ngo/reject/' + ${food.id}}" method="post" class="inline-form">
+                <button type="submit">Reject</button>
+            </form>
+        </article>
+        </div>
+    </div>
+    <div th:if="${suggestedFoods == null or suggestedFoods.size() == 0}">
+        <div class="empty-state-card">
+            <p>No AI-suggested donations found within your preferred distance range yet. Check nearby donations below or revisit shortly.</p>
+        </div>
+    </div>
+
+    <h2>Available Donations Nearby</h2>
+    <div th:if="${foods.size() > 0}">
+        <div class="inventory-list">
+        <article th:each="food : ${foods}" class="inventory-item">
+            <h3 th:text="${food.foodName}"></h3>
+            <p>Type: <span th:text="${food.foodType}"></span></p>
+            <p>Quantity: <span th:text="${food.quantity}"></span> <span th:text="${food.quantityUnit}"></span></p>
+            <p>Fresh Until: <span th:text="${#temporals.format(food.freshUntil, 'dd-MM-yyyy')}"></span></p>
+            <div>
+                <p><strong>Hotel:</strong> <span th:text="${food.hotelName}"></span></p>
+                <p><strong>Contact:</strong> <span th:text="${food.hotelMobile}"></span></p>
+                <p><strong>Address:</strong> <span th:text="${food.hotelAddress}"></span></p>
+                <p th:if="${food.hotelDistanceKm != null}"><strong>Distance:</strong> <span th:text="${food.hotelDistanceKm}"></span> km</p>
+            </div>
+            <p th:if="${food.photoFilename != null}"><a th:href="@{'/set/files/'+${food.photoFilename}}" target="_blank">View Photo</a></p>
+
+            <form th:action="@{'/ngo/accept/' + ${food.id}}" method="post" class="inline-form">
+                <button type="submit">Accept</button>
+            </form>
+            <form th:action="@{'/ngo/reject/' + ${food.id}}" method="post" class="inline-form">
+                <button type="submit">Reject</button>
+            </form>
+        </article>
+        </div>
+    </div>
+    <div th:if="${foods.size() == 0}">
+        <div class="empty-state-card">
+            <p>No available donations in your city right now. New listings will appear here as hotels add fresh food.</p>
+        </div>
+    </div>
+
+    <div class="page-actions">
+        <a class="btn btn-ghost" th:href="@{/ngo/accepted}">View accepted / rejected / delivered foods</a>
+        <a class="btn btn-ghost" th:href="@{/ngo/logout}">Logout</a>
+    </div>
+    </main>
+</body>
+</html>

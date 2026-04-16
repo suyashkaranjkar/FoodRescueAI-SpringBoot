@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Registration Form</title>
+    <link rel="stylesheet" th:href="@{/style.css(v=${@environment.getProperty('app.style.version')})}">
+</head>
+
+<body>
+
+<div class="page-top-nav">
+    <a class="site-brand" th:href="@{/form/show}">FoodRescueAI</a>
+    <p class="site-brand-copy">Hotel registration</p>
+    <a class="btn btn-ghost" th:href="@{/form/show}">Home</a>
+</div>
+
+<main class="auth-shell">
+    <section class="auth-hero">
+        <p class="eyebrow">Hotel onboarding</p>
+        <h1>Create a hotel profile that helps food move fast.</h1>
+        <p class="helper-text">Add the key hotel details once, then use them for better NGO matching.</p>
+
+        <div class="auth-points">
+            <div class="auth-point">
+                <strong>Simple registration</strong>
+                Fill in hotel details once and keep them updated later.
+            </div>
+            <div class="auth-point">
+                <strong>Pickup readiness</strong>
+                Add location and food license proof so claims stay trustworthy.
+            </div>
+        </div>
+    </section>
+
+    <section class="auth-panel form-box">
+        <form th:action="@{/form/submit}" method="post" enctype="multipart/form-data" th:object="${jk}">
+
+            <h1>Hotel Registration</h1>
+            <p class="helper-text">Provide accurate hotel details to start listing safe surplus food for NGO pickup.</p>
+
+        <div class="input-group">
+            <label>Hotel Name</label>
+            <input type="text" th:field="*{name}" required>
+            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-error"></div>
+        </div>
+
+        <div class="input-group">
+            <label>Hotel Permanent ID (ex: ABC12345)</label>
+            <input type="text" th:field="*{permid}" required>
+            <div th:if="${#fields.hasErrors('permid')}" th:errors="*{permid}" class="text-error"></div>
+        </div>
+
+        <div class="input-group">
+            <label>Contact Number</label>
+            <input type="text" th:field="*{mob}" required>
+            <div th:if="${#fields.hasErrors('mob')}" th:errors="*{mob}" class="text-error"></div>
+        </div>
+
+        <div class="input-group">
+            <label>Hotel Contact Email</label>
+            <input type="email" th:field="*{email}" required>
+            <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-error"></div>
+        </div>
+
+        <div class="input-group">
+            <label>Hotel City Location</label>
+            <input type="text" th:field="*{city}" list="city-options" placeholder="Search or select a city" autocomplete="off" required>
+            <datalist id="city-options">
+                <option value="Amravati"></option>
+                <option value="Akola"></option>
+                <option value="Aurangabad"></option>
+                <option value="Bengaluru"></option>
+                <option value="Bhopal"></option>
+                <option value="Chennai"></option>
+                <option value="Delhi"></option>
+                <option value="Goa"></option>
+                <option value="Hyderabad"></option>
+                <option value="Indore"></option>
+                <option value="Jaipur"></option>
+                <option value="Kolhapur"></option>
+                <option value="Kolkata"></option>
+                <option value="Lucknow"></option>
+                <option value="Mumbai"></option>
+                <option value="Nagpur"></option>
+                <option value="Nashik"></option>
+                <option value="Navi Mumbai"></option>
+                <option value="Pune"></option>
+                <option value="Solapur"></option>
+                <option value="Surat"></option>
+                <option value="Thane"></option>
+                <option value="Vadodara"></option>
+            </datalist>
+            <div th:if="${#fields.hasErrors('city')}" th:errors="*{city}" class="text-error"></div>
+        </div>
+
+        <div class="input-group">
+            <label>Hotel Exact Address</label>
+            <textarea th:field="*{address}" rows="4" required></textarea>
+            <div th:if="${#fields.hasErrors('address')}" th:errors="*{address}" class="text-error"></div>
+        </div>
+
+        <div class="input-group">
+            <label>Estimated Distance to NGO Delivery Zone (km)</label>
+            <input type="number" min="0" th:field="*{distanceInKm}" placeholder="5">
+            <div th:if="${#fields.hasErrors('distanceInKm')}" th:errors="*{distanceInKm}" class="text-error"></div>
+        </div>
+
+        <div class="input-group">
+            <label>Upload Food License Proof</label>
+            <input type="file" name="file" required>
+            <div th:if="${#fields.hasErrors('filename')}" th:errors="*{filename}" class="text-error"></div>
+        </div>
+
+            <div th:if="${message}" class="text-error" th:text="${message}"></div>
+
+            <button type="submit">Register</button>
+
+            <a th:href="@{/form/hotel/login}">Already registered? Login here</a>
+
+        </form>
+    </section>
+</main>
+
+</body>
+</html>

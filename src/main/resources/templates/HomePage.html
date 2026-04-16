@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Rescue AI - Welcome</title>
+    <link rel="stylesheet" th:href="@{/style.css(v=${@environment.getProperty('app.style.version')})}">
+</head>
+
+<body>
+    <header class="site-topbar">
+        <div class="home-topbar-left">
+            <a class="site-brand" th:href="@{/form/show}">FoodRescueAI</a>
+            <p class="site-brand-copy">Smart Food Waste Management System</p>
+        </div>
+        <div class="home-topbar-actions">
+            <a class="btn btn-ghost" th:href="@{/form/hotel/login}">Hotel Login</a>
+            <a class="btn btn-ghost" th:href="@{/ngo/login}">NGO Login</a>
+        </div>
+    </header>
+
+    <main class="home-page">
+        <section class="home-hero">
+            <div class="hero-copy">
+                <p class="eyebrow">Food rescue command center</p>
+                <h1>Move surplus food from kitchens to communities in minutes.</h1>
+                <p class="intro-copy">One simple platform for hotels and NGOs to list, claim, and complete food donations quickly.</p>
+
+                <div class="cta-cluster">
+                    <a th:href="@{/form/hotel/register}" class="portal-link">Start as Hotel</a>
+                    <a th:href="@{/ngo/register}" class="portal-link btn-ghost btn-outline">Start as NGO</a>
+                </div>
+
+                <div class="hero-metrics" aria-label="Impact snapshot">
+                    <article class="metric-card">
+                        <h3>Meals Delivered</h3>
+                        <p class="metric-value">10,000+</p>
+                        <p>Rescued and distributed safely.</p>
+                    </article>
+                    <article class="metric-card">
+                        <h3>Partner Network</h3>
+                        <p class="metric-value">250+</p>
+                        <p>Verified hotels and NGOs.</p>
+                    </article>
+                    <article class="metric-card">
+                        <h3>Average Delivery</h3>
+                        <p class="metric-value">&lt; 30 min</p>
+                        <p>From claim to pickup.</p>
+                    </article>
+                </div>
+            </div>
+
+            <aside class="hero-panel">
+                <h2>Today at a glance</h2>
+                <div class="signal-stack home-signal-stack">
+                    <div class="signal-card">
+                        <small>Live Listings</small>
+                        Hotels post available food in real time.
+                    </div>
+                    <div class="signal-card">
+                        <small>Active Claims</small>
+                        NGOs claim nearby donations quickly.
+                    </div>
+                    <div class="signal-card">
+                        <small>Delivery Trace</small>
+                        Status stays visible until delivery is complete.
+                    </div>
+                </div>
+                <div class="home-mini-note">
+                    <strong>Simple and clear:</strong> one shared status flow for everyone.
+                </div>
+            </aside>
+        </section>
+
+        <section class="portal-grid" aria-label="Portal entry points">
+            <article class="portal-card">
+                <h3>Hotel Portal</h3>
+                <p>List surplus food and track claim status.</p>
+                <div class="portal-actions">
+                    <a th:href="@{/form/hotel/register}" class="btn">Register</a>
+                    <a th:href="@{/form/hotel/login}" class="btn btn-ghost">Login</a>
+                </div>
+            </article>
+            <article class="portal-card">
+                <h3>NGO Portal</h3>
+                <p>Find nearby food and manage pickup to delivery.</p>
+                <div class="portal-actions">
+                    <a th:href="@{/ngo/register}" class="btn">Register</a>
+                    <a th:href="@{/ngo/login}" class="btn btn-ghost">Login</a>
+                </div>
+            </article>
+        </section>
+
+        <section class="hero-panel workflow-board" aria-label="How the platform works">
+            <h2>How It Works</h2>
+            <ol class="workflow-list">
+                <li>
+                    <span class="step-badge">1</span>
+                    <div>
+                        <h3>Hotels List Food</h3>
+                        <p>Add quantity, date, and location.</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="step-badge">2</span>
+                    <div>
+                        <h3>NGOs Claim Nearby</h3>
+                        <p>Eligible NGOs claim available donations.</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="step-badge">3</span>
+                    <div>
+                        <h3>Delivery is Confirmed</h3>
+                        <p>Status updates close each donation clearly.</p>
+                    </div>
+                </li>
+            </ol>
+        </section>
+
+        <section class="hero-panel" aria-label="Frequently asked questions">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-rail">
+                <details>
+                    <summary>Is my data secure and private?</summary>
+                    <p>Yes. Data is encrypted and stored securely.</p>
+                </details>
+                <details>
+                    <summary>How do you verify member organizations?</summary>
+                    <p>Hotels and NGOs are verified before access is approved.</p>
+                </details>
+                <details>
+                    <summary>What happens if food quality is disputed?</summary>
+                    <p>Delivery records and status history are used for review.</p>
+                </details>
+            </div>
+        </section>
+
+        <section class="hero-panel" aria-label="Administration access">
+            <h2>Administration</h2>
+            <p>Review the network, inspect records, and manage the platform from one place.</p>
+            <div class="portal-actions">
+                <a th:href="@{/set/login}" class="btn btn-danger">Admin Login</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer-section">
+        <div>
+            <p>JK Intern Suyash Karanjkar, Shruti Chitlange</p>
+            <p>Company email: jkinnovative.amt@gmail.com</p>
+            <p>Mobile Number: 9021532927</p>
+            <p class="footer-note">© 2026 Food Rescue AI. Connecting restaurants with causes.</p>
+        </div>
+    </footer>
+</body>
+</html>

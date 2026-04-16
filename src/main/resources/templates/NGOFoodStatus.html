@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGO Food Status</title>
+    <link rel="stylesheet" th:href="@{/style.css(v=${@environment.getProperty('app.style.version')})}">
+</head>
+<body>
+    <div class="page-top-nav">
+        <a class="site-brand" th:href="@{/form/show}">FoodRescueAI</a>
+        <p class="site-brand-copy">NGO food status</p>
+    </div>
+
+    <main class="page-shell ngo-status-page">
+        <h1>Accepted / Rejected / Delivered Foods</h1>
+        <p class="helper-text">Track all decisions and final delivery outcomes linked to your NGO.</p>
+
+        <section th:if="${foodWithHotel.size()} > 0" class="food-claims-card">
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Food Name</th>
+                            <th>Food Type</th>
+                            <th>Quantity</th>
+                            <th>Status</th>
+                            <th>Hotel Name</th>
+                            <th>Hotel Contact</th>
+                            <th>Hotel Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="item : ${foodWithHotel}">
+                            <td th:text="${item.food.foodName}"></td>
+                            <td th:text="${item.food.foodType}"></td>
+                            <td th:text="${item.food.quantity} + ' ' + ${item.food.quantityUnit}"></td>
+                            <td><span class="status-pill" th:classappend="' ' + ${#strings.toLowerCase(item.food.status.name())}" th:text="${item.food.status}"></span></td>
+                            <td th:text="${item.hotel.name}"></td>
+                            <td th:text="${item.hotel.mob}"></td>
+                            <td th:text="${item.hotel.address}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div th:if="${foodWithHotel.size()} == 0" class="empty-state-card">
+            <p>No accepted or rejected foods yet.</p>
+        </div>
+
+        <div class="page-actions">
+            <a class="btn btn-ghost" th:href="@{/ngo/dashboard}">Back to Dashboard</a>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" th:href="@{/style.css(v=${@environment.getProperty('app.style.version')})}">
+</head>
+<body>
+    <div class="page-top-nav">
+        <a class="site-brand" th:href="@{/form/show}">FoodRescueAI</a>
+        <p class="site-brand-copy">Administration center</p>
+    </div>
+
+    <main class="dashboard">
+        <div class="dashboard-header">
+            <div>
+                <h1>Admin Dashboard</h1>
+                <p>Manage hotels and NGOs on the same page with premium glass panels and separate live search tables.</p>
+            </div>
+            <a class="logout-link" th:href="@{/set/logout}">Logout</a>
+        </div>
+
+        <div class="dashboard-grid">
+            <section class="card hotel">
+                <div class="card-header">
+                    <div>
+                        <h2>Hotel Management</h2>
+                        <span>Search hotels live</span>
+                    </div>
+                </div>
+
+                <div class="search-group">
+                    <label for="hotelSearch">Hotel Search</label>
+                    <input id="hotelSearch" type="search" placeholder="Search by hotel name / mobile / city / ID" autocomplete="off">
+                </div>
+
+                <div class="panel-copy">
+                    This panel displays hotel registration details. The search bar performs live filtering against the hotel table below.
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Mobile</th>
+                                <th>City</th>
+                                <th>File</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="hotelTableBody">
+                            <tr th:each="hotel : ${form}">
+                                <td th:text="${hotel.id}"></td>
+                                <td th:text="${hotel.name}"></td>
+                                <td th:text="${hotel.email}"></td>
+                                <td th:text="${hotel.mob}"></td>
+                                <td th:text="${hotel.city}"></td>
+                                <td>
+                                    <a class="action-link cyan" th:href="@{/set/files/{filename}(filename=${hotel.filename})}" target="_blank">View</a>
+                                </td>
+                                <td class="actions">
+                                    <a class="action-link cyan" th:href="@{/set/files/{filename}(filename=${hotel.filename})}" download>Download</a>
+                                    <a class="action-link cyan" th:href="@{/set/hotel-food/{permid}(permid=${hotel.permid})}">View Foods</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="card ngo">
+                <div class="card-header">
+                    <div>
+                        <h2>NGO Management</h2>
+                        <span>Search NGOs live</span>
+                    </div>
+                </div>
+
+                <div class="search-group">
+                    <label for="ngoSearch">NGO Search</label>
+                    <input id="ngoSearch" type="search" placeholder="Search by NGO name / mobile / city / email" autocomplete="off">
+                </div>
+
+                <div class="panel-copy">
+                    This panel displays NGO profiles. The separate search bar updates only the NGO table below.
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Mobile</th>
+                                <th>City</th>
+                                <th>Verified</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ngoTableBody">
+                            <tr th:each="ngo : ${ngos}">
+                                <td th:text="${ngo.id}"></td>
+                                <td th:text="${ngo.name}"></td>
+                                <td th:text="${ngo.email}"></td>
+                                <td th:text="${ngo.mob}"></td>
+                                <td th:text="${ngo.city}"></td>
+                                <td>
+                                    <span class="status-pill" th:classappend="${ngo.verified} ? ' yes' : ' no'" th:text="${ngo.verified ? 'Yes' : 'No'}"></span>
+                                </td>
+                                <td class="actions">
+                                    <a class="action-link green" th:href="@{/set/ngo-food/{id}(id=${ngo.id})}">View Foods</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <div class="page-actions">
+        </div>
+    </main>
+
+    <script>
+        function initSearch(inputElement, tableBodyElement, apiEndpoint, rowRenderer) {
+            function renderRows(data) {
+                if (!Array.isArray(data) || data.length === 0) {
+                    tableBodyElement.innerHTML = '<tr><td colspan="7" class="empty-state">No results found.</td></tr>';
+                    return;
+                }
+
+                tableBodyElement.innerHTML = data.map(rowRenderer).join('');
+            }
+
+            async function performSearch() {
+                const keyword = inputElement.value.trim();
+                const url = `${apiEndpoint}?keyword=${encodeURIComponent(keyword)}`;
+
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error('Search request failed');
+                    }
+                    const json = await response.json();
+                    renderRows(json);
+                } catch (error) {
+                    console.error('Search error:', error);
+                    tableBodyElement.innerHTML = '<tr><td colspan="7" class="empty-state">Unable to load search results.</td></tr>';
+                }
+            }
+
+            inputElement.addEventListener('keyup', performSearch);
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const hotelSearch = document.getElementById('hotelSearch');
+            const ngoSearch = document.getElementById('ngoSearch');
+            const hotelTableBody = document.getElementById('hotelTableBody');
+            const ngoTableBody = document.getElementById('ngoTableBody');
+
+            initSearch(hotelSearch, hotelTableBody, '/set/search/hotels', function (u) {
+                return `
+                    <tr>
+                        <td>${u.id || ''}</td>
+                        <td>${u.name || ''}</td>
+                        <td>${u.email || ''}</td>
+                        <td>${u.mob || ''}</td>
+                        <td>${u.city || ''}</td>
+                        <td><a class="action-link cyan" href="/set/files/${encodeURIComponent(u.filename)}" target="_blank">View</a></td>
+                        <td class="actions">
+                            <a class="action-link cyan" href="/set/files/${encodeURIComponent(u.filename)}" download>Download</a>
+                            <a class="action-link cyan" href="/set/hotel-food/${encodeURIComponent(u.permid)}">View Foods</a>
+                        </td>
+                    </tr>`;
+            });
+
+            initSearch(ngoSearch, ngoTableBody, '/set/search/ngos', function (u) {
+                const verifiedClass = u.verified ? 'yes' : 'no';
+                const verifiedText = u.verified ? 'Yes' : 'No';
+                return `
+                    <tr>
+                        <td>${u.id || ''}</td>
+                        <td>${u.name || ''}</td>
+                        <td>${u.email || ''}</td>
+                        <td>${u.mob || ''}</td>
+                        <td>${u.city || ''}</td>
+                        <td><span class="status-pill ${verifiedClass}">${verifiedText}</span></td>
+                        <td class="actions">
+                            <a class="action-link green" href="/set/ngo-food/${encodeURIComponent(u.id)}">View Foods</a>
+                        </td>
+                    </tr>`;
+            });
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food List Management</title>
+    <link rel="stylesheet" th:href="@{/style.css(v=${@environment.getProperty('app.style.version')})}">
+</head>
+<body>
+    <div class="page-top-nav">
+        <a class="site-brand" th:href="@{/form/show}">FoodRescueAI</a>
+        <p class="site-brand-copy">Hotel food workspace</p>
+    </div>
+
+    <main class="page-shell food-list-page">
+    <h1>Food List Management</h1>
+    <p>Manage your food inventory and expiry dates</p>
+    <p class="helper-text">Tip: Add complete quantity and freshness details to improve faster NGO claims.</p>
+
+    <div th:if="${claimedCount > 0 || rejectedCount > 0}">
+        <p class="info-banner">Your food has an NGO status: <strong th:text="${claimedCount}"></strong> claimed, <strong th:text="${rejectedCount}"></strong> rejected, <strong th:text="${deliveredCount}"></strong> delivered. <a th:href="@{/form/hotel/food/claims}">Click to view and manage these items</a>.</p>
+    </div>
+
+    <div th:if="${user}">
+        <h3>Hotel Information</h3>
+        <p><strong>Hotel Name:</strong> <span th:text="${user.name}"></span></p>
+        <p><strong>Permanent ID:</strong> <span th:text="${user.permid}"></span></p>
+        <p><strong>Contact:</strong> <span th:text="${user.mob}"></span></p>
+    </div>
+
+    <hr>
+
+    <section class="food-editor-card">
+    <h2 th:if="${isEdit != true}">Add New Food Item</h2>
+    <h2 th:if="${isEdit == true}">Edit Food Item</h2>
+
+    <form class="food-editor-form" th:if="${isEdit != true}" th:action="@{/form/hotel/food/add}" method="post" enctype="multipart/form-data" onsubmit="return validateDates()">
+        <div class="food-field span-2">
+            <label for="foodName">Food Name *</label>
+            <input type="text" id="foodName" name="foodName" placeholder="e.g., Chicken Biryani" required>
+        </div>
+
+        <div class="food-field">
+            <label for="foodType">Food Type *</label>
+            <select id="foodType" name="foodType" required>
+                <option value="">Select Food Type</option>
+                <option value="Veg">Veg</option>
+                <option value="Non-Veg">Non-Veg</option>
+            </select>
+        </div>
+
+        <div class="food-field">
+            <label for="quantity">Quantity *</label>
+            <input type="number" id="quantity" name="quantity" placeholder="e.g., 10" min="1" required>
+        </div>
+
+        <div class="food-field">
+            <label for="quantityUnit">Quantity Unit *</label>
+            <select id="quantityUnit" name="quantityUnit" required>
+                <option value="">Select Unit</option>
+                <option value="kg">Kilogram (kg)</option>
+                <option value="servings">Servings</option>
+                <option value="ltr">Liters (ltr)</option>
+                <option value="packets">Packets</option>
+            </select>
+        </div>
+
+        <div class="food-field">
+            <label for="cookedWhen">Cooked When *</label>
+            <input type="date" id="cookedWhen" name="cookedWhen" required>
+        </div>
+
+        <div class="food-field">
+            <label for="freshUntil">Fresh Until *</label>
+            <input type="date" id="freshUntil" name="freshUntil" required>
+        </div>
+
+        <div class="food-field span-2">
+            <label for="photo">Photo (optional)</label>
+            <input type="file" id="photo" name="photo" accept="image/*">
+        </div>
+
+        <div class="food-field form-actions span-2">
+            <button type="submit">Add Food Item</button>
+            <button type="reset" class="btn btn-ghost">Clear</button>
+        </div>
+    </form>
+
+    <form class="food-editor-form" th:if="${isEdit == true}" th:action="@{/form/hotel/food/update/{id}(id=${food.id})}" method="post" enctype="multipart/form-data" onsubmit="return validateDates()">
+        <div class="food-field span-2">
+            <label for="editFoodName">Food Name *</label>
+            <input type="text" id="editFoodName" name="foodName" th:value="${food.foodName}" required>
+        </div>
+
+        <div class="food-field">
+            <label for="editFoodType">Food Type *</label>
+            <select id="editFoodType" name="foodType" required>
+                <option value="">Select Food Type</option>
+                <option value="Veg" th:selected="${food.foodType == 'Veg'}">Veg</option>
+                <option value="Non-Veg" th:selected="${food.foodType == 'Non-Veg'}">Non-Veg</option>
+            </select>
+        </div>
+
+        <div class="food-field">
+            <label for="editQuantity">Quantity *</label>
+            <input type="number" id="editQuantity" name="quantity" th:value="${food.quantity}" min="1" required>
+        </div>
+
+        <div class="food-field">
+            <label for="editQuantityUnit">Quantity Unit *</label>
+            <select id="editQuantityUnit" name="quantityUnit" required>
+                <option value="">Select Unit</option>
+                <option value="kg" th:selected="${food.quantityUnit == 'kg'}">Kilogram (kg)</option>
+                <option value="servings" th:selected="${food.quantityUnit == 'servings'}">Servings</option>
+                <option value="ltr" th:selected="${food.quantityUnit == 'ltr'}">Liters (ltr)</option>
+                <option value="packets" th:selected="${food.quantityUnit == 'packets'}">Packets</option>
+            </select>
+        </div>
+
+        <div class="food-field">
+            <label for="editCookedWhen">Cooked When *</label>
+            <input type="date" id="editCookedWhen" name="cookedWhen" th:value="${food.cookedWhen}" required>
+        </div>
+
+        <div class="food-field">
+            <label for="editFreshUntil">Fresh Until *</label>
+            <input type="date" id="editFreshUntil" name="freshUntil" th:value="${food.freshUntil}" required>
+        </div>
+
+        <div class="food-field span-2">
+            <label for="editPhoto">Photo (optional)</label>
+            <input type="file" id="editPhoto" name="photo" accept="image/*">
+            <span th:if="${food.photoFilename != null}">Current: <a th:href="@{'/set/files/'+${food.photoFilename}}" th:text="${food.photoFilename}"></a></span>
+        </div>
+
+        <div class="food-field form-actions span-2">
+            <button type="submit">Update Food Item</button>
+            <a class="btn btn-ghost" th:href="@{/form/hotel/food}">Cancel</a>
+        </div>
+    </form>
+    </section>
+
+    <hr>
+
+    <h2>Food Inventory</h2>
+
+    <div th:if="${foodList.size() > 0}" class="inventory-list">
+        <article th:each="item : ${foodList}" class="inventory-item">
+            <h4 th:text="${item.foodName}"></h4>
+            <p><strong>Food Type:</strong> <span th:text="${item.foodType}"></span></p>
+            <p><strong>Quantity:</strong> <span th:text="${item.quantity}"></span> <span th:text="${item.quantityUnit}"></span></p>
+            <p th:if="${item.cookedWhen != null}"><strong>Cooked:</strong> <span th:text="${#temporals.format(item.cookedWhen, 'dd-MM-yyyy')}"></span></p>
+            <p th:if="${item.freshUntil != null}"><strong>Fresh Until:</strong> <span th:text="${#temporals.format(item.freshUntil, 'dd-MM-yyyy')}"></span></p>
+            <p><strong>Status:</strong> <span class="status-pill" th:classappend="' ' + ${#strings.toLowerCase(item.status.name())}" th:text="${item.status}"></span></p>
+            <p th:if="${item.photoFilename != null}"><strong>Photo:</strong> <a th:href="@{'/set/files/'+${item.photoFilename}}" target="_blank">View</a></p>
+
+            <div th:if="${item.status.name() == 'CLAIMED'}">
+                <p class="text-info">This item has been claimed by NGO: <strong th:text="${item.acceptedNgoName}"></strong>.</p>
+
+                <button type="button" th:attr="onclick='toggleNgoDetails(\'ngoDetails-' + ${item.id} + '\')'">View NGO contact & delivery address</button>
+
+                <div th:id="${'ngoDetails-' + item.id}" class="details-panel hidden">
+                    <p><strong>NGO Name:</strong> <span th:text="${item.acceptedNgoName}"></span></p>
+                    <p><strong>Mobile:</strong> <span th:text="${item.acceptedNgoMobile}">N/A</span></p>
+                    <p><strong>Email:</strong> <span th:text="${item.acceptedNgoEmail}">N/A</span></p>
+                    <p><strong>Delivery Address:</strong> <span th:text="${item.acceptedNgoAddress}">N/A</span></p>
+                    <p><strong>Parcel Location (City):</strong> <span th:text="${item.acceptedNgoCity}">N/A</span></p>
+                </div>
+
+                <p class="text-info">Call the NGO and confirm pickup/delivery before marking delivered.</p>
+                <form th:action="@{/form/hotel/food/deliver/{id}(id=${item.id})}" method="post" class="inline-form">
+                    <button type="submit">Mark as Delivered</button>
+                </form>
+                <form th:action="@{/form/hotel/food/ngoreject/{id}(id=${item.id})}" method="post" class="inline-form">
+                    <input type="text" name="reason" placeholder="Reason for rejection" required minlength="3">
+                    <button type="submit">Reject</button>
+                </form>
+            </div>
+
+            <div th:if="${item.status.name() != 'CLAIMED'}" class="inventory-actions">
+                <a th:href="@{/form/hotel/food/edit/{id}(id=${item.id})}">Edit</a>
+                <a th:href="@{/form/hotel/food/delete/{id}(id=${item.id})}" onclick="return confirm('Are you sure?')">Delete</a>
+            </div>
+        </article>
+    </div>
+
+    <div th:if="${foodList.size() == 0}">
+        <div class="empty-state-card">
+            <p>No safe food items available yet. Add a new food item above to start receiving NGO requests.</p>
+        </div>
+    </div>
+
+    <h2>Waste Log (Unsafe for Donation)</h2>
+
+    <div th:if="${wasteList.size() > 0}" class="inventory-list">
+        <article th:each="item : ${wasteList}" class="inventory-item">
+            <h4 th:text="${item.foodName}"></h4>
+            <p><strong>Food Type:</strong> <span th:text="${item.foodType}"></span></p>
+            <p><strong>Quantity:</strong> <span th:text="${item.quantity}"></span> <span th:text="${item.quantityUnit}"></span></p>
+            <p th:if="${item.cookedWhen != null}"><strong>Cooked:</strong> <span th:text="${#temporals.format(item.cookedWhen, 'dd-MM-yyyy')}"></span></p>
+            <p th:if="${item.freshUntil != null}"><strong>Fresh Until:</strong> <span th:text="${#temporals.format(item.freshUntil, 'dd-MM-yyyy')}"></span></p>
+            <p><strong>Status:</strong> <span class="status-pill" th:classappend="' ' + ${#strings.toLowerCase(item.status.name())}" th:text="${item.status}"></span></p>
+            <p th:if="${item.photoFilename != null}"><strong>Photo:</strong> <a th:href="@{'/set/files/'+${item.photoFilename}}" target="_blank">View</a></p>
+
+            <div class="inventory-actions">
+                <a th:href="@{/form/hotel/food/delete/{id}(id=${item.id})}" onclick="return confirm('Are you sure you want to delete this waste item?')">Delete</a>
+            </div>
+        </article>
+    </div>
+
+    <div th:if="${wasteList.size() == 0}">
+        <div class="empty-state-card">
+            <p>No waste entries currently. This means your listed items are still in safe donation flow.</p>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="page-actions">
+        <a class="btn btn-ghost" th:href="@{/form/hotel/food/claims}">View accepted / rejected / delivered items</a>
+    </div>
+    </main>
+</body>
+
+<script>
+function validateDates() {
+    let cookedWhen, freshUntil;
+    
+    // Check if it's add form or edit form
+    if (document.getElementById('cookedWhen')) {
+        cookedWhen = document.getElementById('cookedWhen').value;
+        freshUntil = document.getElementById('freshUntil').value;
+    } else if (document.getElementById('editCookedWhen')) {
+        cookedWhen = document.getElementById('editCookedWhen').value;
+        freshUntil = document.getElementById('editFreshUntil').value;
+    }
+    
+    if (cookedWhen && freshUntil) {
+        const cookedDate = new Date(cookedWhen);
+        const freshDate = new Date(freshUntil);
+        
+        if (freshDate < cookedDate) {
+            alert('Fresh Until date cannot be before Cooked When date. Please select the same date or a later date.');
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+function toggleNgoDetails(divId) {
+    var detailDiv = document.getElementById(divId);
+    if (detailDiv) {
+        detailDiv.style.display = detailDiv.style.display === 'none' ? 'block' : 'none';
+    }
+}
+</script>
+
+</html>
+

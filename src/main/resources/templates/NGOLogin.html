@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGO Login</title>
+    <link rel="stylesheet" th:href="@{/style.css(v=${@environment.getProperty('app.style.version')})}">
+</head>
+<body>
+    <div class="page-top-nav">
+        <a class="site-brand" th:href="@{/form/show}">FoodRescueAI</a>
+        <p class="site-brand-copy">NGO access</p>
+        <a class="btn btn-ghost" th:href="@{/form/show}">Home</a>
+    </div>
+
+    <main class="auth-shell">
+        <section class="auth-hero">
+            <p class="eyebrow">NGO dashboard</p>
+            <h1>Log in to see donations you can serve.</h1>
+            <p class="helper-text">Review nearby food, accept what fits your capacity, and coordinate pickup quickly.</p>
+
+            <div class="auth-points">
+                <div class="auth-point">
+                    <strong>Nearby matching</strong>
+                    See food listings filtered by city and distance.
+                </div>
+                <div class="auth-point">
+                    <strong>Actionable claim flow</strong>
+                    Accept or reject donations with contact data attached.
+                </div>
+            </div>
+        </section>
+
+        <section class="auth-panel login-box">
+            <form th:action="@{/ngo/login}" method="post">
+                <h1>NGO Login Portal</h1>
+                <p class="helper-text">Login to view nearby donations, claim items, and track delivery status.</p>
+
+                <label>Email</label>
+                <input type="email" name="email" required>
+
+                <label>Password</label>
+                <input type="password" name="password" required>
+
+                <input type="submit" value="Login">
+            </form>
+
+            <p class="error" th:text="${error}"></p>
+
+            <h3>Don't have an Account?</h3>
+            <a th:href="@{/ngo/register}">Register your NGO Here</a>
+        </section>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="stylesheet" th:href="@{/style.css(v=${@environment.getProperty('app.style.version')})}">
+</head>
+
+<body>
+
+<div class="page-top-nav">
+    <a class="site-brand" th:href="@{/form/show}">FoodRescueAI</a>
+    <p class="site-brand-copy">Administration</p>
+    <a class="btn btn-ghost" th:href="@{/form/show}">Home</a>
+</div>
+
+<main class="auth-shell">
+    <section class="auth-hero">
+        <p class="eyebrow">Admin console</p>
+        <h1>Moderate the platform from one control panel.</h1>
+        <p class="helper-text">Review hotels, NGOs, and food inventory from a clean operational view.</p>
+
+        <div class="auth-points">
+            <div class="auth-point">
+                <strong>Network visibility</strong>
+                Inspect users, food, and claims from the admin dashboard.
+            </div>
+            <div class="auth-point">
+                <strong>Operational control</strong>
+                Remove bad records and review activity without leaving the console.
+            </div>
+        </div>
+    </section>
+
+    <section class="auth-panel admin-box">
+        <h1>Admin Login</h1>
+        <p class="helper-text">Admin access for verification, monitoring, and support operations.</p>
+
+        <form th:action="@{/set/login}" method="post">
+
+            <label>UserName</label>
+            <input type="text" name="username" required>
+
+            <label>Password</label>
+            <input type="password" name="password" required>
+
+            <button type="submit">Login</button>
+
+        </form>
+
+        <p class="error" th:text="${error}"></p>
+    </section>
+</main>
+
+</body>
+
+</html>

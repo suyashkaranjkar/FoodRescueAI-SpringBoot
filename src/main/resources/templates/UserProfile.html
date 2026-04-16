@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Stored Data</title>
+    <link rel="stylesheet" th:href="@{/style.css(v=${@environment.getProperty('app.style.version')})}">
+</head>
+
+<body>
+
+<div class="data-box">
+
+    <h1>Hotel Stored Data</h1>
+
+    <p><strong>Name :</strong> <span th:text="${form.name}"></span></p>
+    <p><strong>Permanent ID :</strong> <span th:text="${form.permid}"></span></p>
+    <p><strong>Contact Number :</strong> <span th:text="${form.mob}"></span></p>
+    <p><strong>Address :</strong> <span th:text="${form.address}"></span></p>
+    <p><strong>City :</strong> <span th:text="${form.city}"></span></p>
+    <p><strong>Food License File Path :</strong> <span th:text="${form.filepath}"></span></p>
+
+    <div class="page-actions">
+        <a class="btn" th:href="@{/form/hotel/food}">Add / View Food List</a>
+        <a class="btn btn-ghost" th:href="@{/form/edit}">Update Profile</a>
+    </div>
+
+</div>
+
+</body>
+</html>

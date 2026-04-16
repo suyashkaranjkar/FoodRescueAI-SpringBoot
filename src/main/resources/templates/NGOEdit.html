@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit NGO Profile</title>
+    <link rel="stylesheet" th:href="@{/style.css(v=${@environment.getProperty('app.style.version')})}">
+</head>
+<body>
+    <div class="form-box">
+        <form th:action="@{/ngo/edit}" method="post" th:object="${ngo}">
+            <h1>Edit NGO Profile</h1>
+
+            <div class="input-group">
+                <label>NGO Name</label>
+                <input type="text" th:field="*{name}" required>
+            </div>
+
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" th:field="*{email}" readonly>
+            </div>
+
+            <div class="input-group">
+                <label>Password (leave empty to keep current)</label>
+                <input type="password" th:field="*{password}">
+            </div>
+
+            <div class="input-group">
+                <label>Contact Number</label>
+                <input type="text" th:field="*{mob}" required>
+            </div>
+
+            <div class="input-group">
+                <label>City</label>
+                <select th:field="*{city}" required>
+                    <option value="">Select City</option>
+                    <option value="Amravati" th:selected="${ngo.city == 'Amravati'}">Amravati</option>
+                    <option value="Nagpur" th:selected="${ngo.city == 'Nagpur'}">Nagpur</option>
+                    <option value="Pune" th:selected="${ngo.city == 'Pune'}">Pune</option>
+                    <option value="Mumbai" th:selected="${ngo.city == 'Mumbai'}">Mumbai</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Preferred Delivery Distance (km)</label>
+                <input type="number" min="1" th:field="*{preferredDistanceKm}" placeholder="10">
+            </div>
+
+            <div class="input-group">
+                <label>NGO Capacity (number of meals)</label>
+                <input type="number" min="1" th:field="*{capacity}" placeholder="100">
+            </div>
+
+            <div class="input-group">
+                <label>Address</label>
+                <textarea th:field="*{address}" required></textarea>
+            </div>
+
+            <button type="submit">Save Changes</button>
+        </form>
+
+        <div th:if="${message}" class="text-success" th:text="${message}"></div>
+
+        <a th:href="@{/ngo/dashboard}">← Back to Dashboard</a>
+    </div>
+</body>
+</html>

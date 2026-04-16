@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Claimed/Rejected/Delivered Foods</title>
+    <link rel="stylesheet" th:href="@{/style.css(v=${@environment.getProperty('app.style.version')})}">
+</head>
+<body>
+    <div class="page-top-nav">
+        <a class="site-brand" th:href="@{/form/show}">FoodRescueAI</a>
+        <p class="site-brand-copy">Claim response center</p>
+    </div>
+
+    <main class="page-shell food-claims-page">
+    <h1>Claimed / Rejected / Delivered Food Requests</h1>
+    <p class="helper-text">Track NGO responses and complete delivery updates from this page.</p>
+
+    <div th:if="${claimedFoods != null and claimedFoods.size() > 0}">
+        <p class="info-banner">Showing <strong th:text="${claimedFoods.size()}"></strong> claimed/rejected/delivered request(s). You can contact the NGO and update delivery status from here.</p>
+        <section class="food-claims-card">
+        <div class="table-responsive claims-table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>Food Name</th>
+                    <th>Type</th>
+                    <th>Qty</th>
+                    <th>Status</th>
+                    <th>Hotel Rejection Reason</th>
+                    <th>NGO Name</th>
+                    <th>NGO Contact</th>
+                    <th>NGO Location</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${claimedFoods}">
+                    <td th:text="${item.foodName}"></td>
+                    <td th:text="${item.foodType}"></td>
+                    <td th:text="${item.quantity} + ' ' + ${item.quantityUnit}"></td>
+                    <td><span class="status-pill" th:classappend="' ' + ${#strings.toLowerCase(item.status.name())}" th:text="${item.status}"></span></td>
+                    <td th:text="${item.hotelRejectionReason != null and !#strings.isEmpty(item.hotelRejectionReason)} ? ${item.hotelRejectionReason} : 'N/A'"></td>
+                    <td th:text="${item.acceptedNgoName}"></td>
+                    <td>
+                        <div th:text="${item.acceptedNgoMobile}"></div>
+                        <div th:text="${item.acceptedNgoEmail}"></div>
+                    </td>
+                    <td>
+                        <div th:text="${item.acceptedNgoAddress}"></div>
+                        <div th:text="${item.acceptedNgoCity}"></div>
+                    </td>
+                    <td class="claims-actions-cell">
+                        <form th:if="${item.status != null and item.status.name() == 'CLAIMED'}" th:action="@{/form/hotel/food/deliver/{id}(id=${item.id})}" method="post" class="inline-form claims-action-row">
+                            <button type="submit">Mark Delivered</button>
+                        </form>
+                        <form th:if="${item.status != null and item.status.name() == 'CLAIMED'}" th:action="@{/form/hotel/food/ngoreject/{id}(id=${item.id})}" method="post" class="inline-form claims-action-row claims-reject-row">
+                            <input class="claims-reason-input" type="text" name="reason" placeholder="Reason for rejection" required minlength="3">
+                            <button type="submit">Reject</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        </section>
+    </div>
+
+    <div th:if="${claimedFoods == null or claimedFoods.size() == 0}">
+        <div class="empty-state-card food-claims-card">
+            <p>No claimed, rejected, or delivered items yet. As soon as NGOs respond, request updates will appear here.</p>
+        </div>
+    </div>
+
+    <div class="page-actions">
+        <a class="btn btn-ghost" th:href="@{/form/hotel/food}">Back to Food Inventory</a>
+    </div>
+    </main>
+</body>
+</html>

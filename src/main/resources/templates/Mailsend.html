@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mail Form</title>
+    <link rel="stylesheet" th:href="@{/style.css(v=${@environment.getProperty('app.style.version')})}">
+</head>
+
+<body>
+
+<div class="mail-box">
+
+    <h1>Send Approval Mail</h1>
+
+    <form th:action="@{/send/send-mail}" method="post">
+
+        <label>Name</label>
+        <input type="text" name="name" th:value="${name}" readonly>
+
+        <label>Email</label>
+        <input type="email" name="to" th:value="${email}" readonly>
+
+        <label>Subject</label>
+        <input type="text" name="subject" value="Task Complete">
+
+        <label>Message</label>
+        <textarea name="message" rows="5" required></textarea>
+
+        <input type="submit" value="Send Mail">
+
+    </form>
+
+    <p class="success" th:text="${success}"></p>
+
+    <div class="links">
+        <a th:href="@{/set/dashboard}">Dashboard</a>
+        <a th:href="@{/form/show}">Home</a>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete</title>
+    <link rel="stylesheet" th:href="@{/style.css(v=${@environment.getProperty('app.style.version')})}">
+</head>
+
+<body>
+
+<div class="success-box">
+
+    <h1>Hotel Registration Completed Successfully</h1>
+
+    <a th:href="@{/form/show}">Go To Home Page</a>
+
+</div>
+
+</body>
+
+</html>
