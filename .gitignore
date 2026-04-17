@@ -39,3 +39,7 @@ src/main/resources/application-local.properties
 .env.local
 *.key
 *.pem
+
+#Upload Files
+uploads/
+temp/
